@@ -17,6 +17,7 @@ func (s *server) start() {
 		c.String(http.StatusOK, "accepted")
 	})
 	s.Engine.GET("/lights", routs.GetLights)
+	s.Engine.POST("/lights", routs.PostLights)
 	s.Engine.POST("/test", testPost)
 	fmt.Printf("boom")
 	s.Engine.Run(":8080")
