@@ -19,7 +19,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: null-channel/studio-lights
+          repository: null-channel/studio-lights/lights
           tag_with_ref: true
   build:
     name: Tests
