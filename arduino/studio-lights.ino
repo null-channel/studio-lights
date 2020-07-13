@@ -5,7 +5,10 @@
   #include <avr/power.h>
 #endif
 #include <SPI.h>
-#include <WiFi.h>
+//#include <WiFi.h>
+//#include <WiFi101.h>
+
+#include <WiFiNINA.h>
 #include <ArduinoHttpClient.h>
 
 //Defines - used as constants, not good practice in c++
@@ -19,12 +22,13 @@
 #define DELAY 5000
 
 //Global variables - again not good practice in other "real" programming
-char ssid[] = "yourNetwork";     //  your network SSID (name)
-char pass[] = "secretPassword";  // your network password
+char ssid[] = "ssid";     //  your network SSID (name)
+char pass[] = "yourpass";  // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 char serverAddress[] = "10.1.1.50";  // server address
 int port = 32001;
 WiFiClient wifi;
+
 HttpClient client = HttpClient(wifi, serverAddress, port);
 
 Adafruit_NeoPixel pixels_1(BANK_SIZE, PIN_1, NEO_GRB + NEO_KHZ800);
@@ -35,6 +39,8 @@ Adafruit_NeoPixel pixels_5(BANK_SIZE, PIN_5, NEO_GRB + NEO_KHZ800);
 
 
 void setup() {
+  Serial.begin(9600);
+
   // put your setup code here, to run once:
   pixels_1.begin();
   pixels_2.begin();
@@ -42,13 +48,21 @@ void setup() {
   pixels_4.begin();
   pixels_5.begin();
 
-  Serial.begin(9600);
-  WiFi.begin(ssid, pass);
- 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting...");
+  if (WiFi.status() == WL_NO_MODULE) {
+    Serial.println("Communication with WiFi module failed!");
+    // don't continue
+    while (true);
   }
+
+  Serial.println("Starting Wifi");
+  while ( status != WL_CONNECTED) {
+    Serial.print("Attempting to connect to Network named: ");
+    Serial.println(ssid);                   // print the network name (SSID);
+    Serial.println(pass);
+    // Connect to WPA/WPA2 network:
+    status = WiFi.begin(ssid, pass);
+  }
+  Serial.println("connected");
 }
 
 void loop() {
@@ -67,14 +81,17 @@ void loop() {
       
       const char* json = "{\"Red\":255,\"Blue\":255,\"Green\":255}";
       
-      deserializeJson(doc, client.readString());
+      //deserializeJson(doc, client.readString());
       deserializeJson(doc, client.responseBody());
       
       red = doc["Red"]; // 255
       blue = doc["Blue"]; // 255
       green = doc["Green"]; // 255
+      Serial.println(red);
     }
   }
+
+  Serial.println(red);
 
   //set the colors
   pixels_1.clear();
@@ -94,5 +111,6 @@ void loop() {
   pixels_4.show();
   pixels_5.show();
 
+  Serial.println("sleeping");
   delay(DELAY);
 }
