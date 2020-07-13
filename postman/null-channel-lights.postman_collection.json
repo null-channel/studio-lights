@@ -1,0 +1,52 @@
+{
+	"info": {
+		"_postman_id": "ada7b586-771a-40f8-8ac9-7432b9044b26",
+		"name": "null-channel-lights",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost",
+			"item": [
+				{
+					"name": "post-lights-localhost",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						},
+						"description": "make a post changing the light color"
+					},
+					"response": []
+				},
+				{
+					"name": "get-lights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						},
+						"description": "make a post changing the light color"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "post-lights",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				},
+				"description": "make a post changing the light color"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
