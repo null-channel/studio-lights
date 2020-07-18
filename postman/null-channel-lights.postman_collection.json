@@ -38,6 +38,44 @@
 		{
 			"name": "post-lights",
 			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://10.1.1.50:32001/light/2?red=0&blue=50&green=50",
+					"protocol": "http",
+					"host": [
+						"10",
+						"1",
+						"1",
+						"50"
+					],
+					"port": "32001",
+					"path": [
+						"light",
+						"2"
+					],
+					"query": [
+						{
+							"key": "red",
+							"value": "0"
+						},
+						{
+							"key": "blue",
+							"value": "50"
+						},
+						{
+							"key": "green",
+							"value": "50"
+						}
+					]
+				},
+				"description": "make a post changing the light color"
+			},
+			"response": []
+		},
+		{
+			"name": "get-lights",
+			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
