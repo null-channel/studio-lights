@@ -29,8 +29,8 @@ struct light {
 } l0,l1,l2,l3 ;
 
 //Global variables - again not good practice in other "real" programming
-char ssid[] = "ssid";     //  your network SSID (name)
-char pass[] = "wifipass";  // your network password
+char ssid[] = "The Prancing Pony";     //  your network SSID (name)
+char pass[] = "M@r3k1553xy1!";  // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 char serverAddress[] = "10.1.1.50";  // server address
 int port = 32001;
@@ -61,10 +61,10 @@ void setup() {
   Serial.println("connected");
 }
 
-void collorize(Adafruit_NeoPixel pixel, uint32_t color, int bank_size) {
-  pixel.clear();
-  pixel.fill(color,0,bank_size);
-  pixel.show();
+void collorize(Adafruit_NeoPixel* pixel, uint32_t color, int bank_size) {
+  pixel->clear();
+  pixel->fill(color,0,bank_size);
+  pixel->show();
 }
 
 void connectToWifi() {
@@ -97,55 +97,53 @@ void loop() {
     // Get the request response payload
     // TODO: Parsing
 
-    const size_t capacity = JSON_ARRAY_SIZE(4) + 5*JSON_OBJECT_SIZE(1) + 4*JSON_OBJECT_SIZE(4) + 140;
+    const size_t capacity = JSON_ARRAY_SIZE(4) + 4*JSON_OBJECT_SIZE(4) + 100;
     DynamicJsonDocument doc(capacity);
     
-    const char* json = "{\"lights\":[{\"light\":{\"Number\":1,\"Red\":60,\"Blue\":0,\"Green\":38}},{\"light\":{\"Number\":2,\"Red\":60,\"Blue\":0,\"Green\":38}},{\"light\":{\"Number\":3,\"Red\":60,\"Blue\":0,\"Green\":38}},{\"light\":{\"Number\":0,\"Red\":60,\"Blue\":0,\"Green\":38}}]}";
-    
+    const char* json = "[{\"Number\":0,\"Red\":255,\"Blue\":50,\"Green\":255},{\"Number\":1,\"Red\":255,\"Blue\":255,\"Green\":0},{\"Number\":2,\"Red\":0,\"Blue\":50,\"Green\":50},{\"Number\":3,\"Red\":0,\"Blue\":100,\"Green\":10}]";
+
     deserializeJson(doc, client.responseBody());
     
-    JsonArray lights = doc["lights"];
     
-    JsonObject lights_0_light = lights[0]["light"];
+    JsonObject lights_0_light = doc[0];
     l0.number = lights_0_light["Number"];
     l0.blue = lights_0_light["Blue"];
     l0.green = lights_0_light["Green"];
     l0.red = lights_0_light["Red"];
     
-    JsonObject lights_1_light = lights[1]["light"];
+    JsonObject lights_1_light = doc[1];
     l1.number = lights_1_light["Number"];
     l1.blue = lights_1_light["Blue"];
     l1.green = lights_1_light["Green"];
     l1.red = lights_1_light["Red"];
     
-    JsonObject lights_2_light = lights[2]["light"];
+    JsonObject lights_2_light = doc[2];
     l2.number = lights_2_light["Number"];
     l2.blue = lights_2_light["Blue"];
     l2.green = lights_2_light["Green"];
     l2.red = lights_2_light["Red"];
     
-    JsonObject lights_3_light = lights[3]["light"];
+    JsonObject lights_3_light = doc[3];
     l3.number = lights_3_light["Number"];
     l3.blue = lights_3_light["Blue"];
     l3.green = lights_3_light["Green"];
     l3.red = lights_3_light["Red"];
+    
+    Serial.println(l3.red);
+    Serial.println(l3.blue);
+    Serial.println(l3.green);
+    
   }
 
-
   //Manage the light color right now all banks have the same color, could change this in the future
-  //first clear them;
-  pixels_1.clear();
-  pixels_2.clear();
-  pixels_3.clear();
-  pixels_4.clear();
-  uint32_t color = pixels_1.Color(l0.red, l0.blue, l0.green);
-  collorize(pixels_1, color, BANK_SIZE); 
-  color = pixels_1.Color(l1.red, l1.blue, l1.green);
-  collorize(pixels_2, color, BANK_SIZE); 
-  color = pixels_1.Color(l2.red, l2.blue, l2.green);
-  collorize(pixels_3, color, BANK_SIZE); 
-  color = pixels_1.Color(l3.red, l3.blue, l3.green);
-  collorize(pixels_4, color, BANK_SIZE); 
+  uint32_t color = pixels_1.Color(l0.red, l0.green, l0.blue);
+  collorize(&pixels_1, color, BANK_SIZE); 
+  color = pixels_1.Color(l1.red, l1.green, l1.blue);
+  collorize(&pixels_2, color, BANK_SIZE); 
+  color = pixels_1.Color(l2.red, l2.green, l2.blue);
+  collorize(&pixels_3, color, BANK_SIZE); 
+  color = pixels_1.Color(l3.red, l3.green, l3.blue);
+  collorize(&pixels_4, color, BANK_SIZE); 
 
   Serial.println("wait a second to call the api again");
   delay(DELAY);
