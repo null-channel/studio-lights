@@ -8,16 +8,34 @@ import (
 	"strconv"
 )
 
-var Lights structs.Lights
+var Lights []*structs.Light
 
 func init() {
-	Lights = structs.Lights {
-		Status: structs.Status {
-			On: true,
+	Lights = []*structs.Light {
+		&structs.Light {
+			Number: 0,
+			Red: 255,
+			Blue: 50,
+			Green: 255,
 		},
-		Red: 255,
-		Blue: 50,
-		Green: 255,
+		&structs.Light {
+			Number: 1,
+			Red:255,
+			Blue: 255,
+			Green: 0,
+		},
+		&structs.Light {
+			Number: 2,
+			Red:0,
+			Blue: 205,
+			Green: 0,
+		},
+		&structs.Light {
+			Number: 3,
+			Red:0,
+			Blue: 100,
+			Green: 10,
+		},
 	}
 }
 
@@ -26,8 +44,11 @@ func GetLights(c *gin.Context) {
 }
 
 func PostLights(c *gin.Context) {
-	r, g, b := 0,0,0
-	is_on := false
+	r, g, b, number := 0,0,0,0
+	if n, err := strconv.Atoi(c.Param("number")); err == nil {
+		number = n
+	}
+
 	if n, err := strconv.Atoi(c.DefaultQuery("red", "0")); err == nil {
 		r = n
 	}
@@ -37,17 +58,13 @@ func PostLights(c *gin.Context) {
 	if n, err := strconv.Atoi(c.DefaultQuery("green", "0")); err == nil {
 		g = n
 	}
-	if b, err := strconv.ParseBool(c.DefaultQuery("status_on", "false")); err == nil {
-		is_on = b
-	}
 
-	Lights = structs.Lights{
-		Status: structs.Status{
-			On: is_on,
-		},
-		Red: r,
-		Blue: b,
-		Green: g,
+	for _, v := range Lights {
+		if v.Number == number {
+			v.Red = r
+			v.Blue = b
+			v.Green = g
+		}
 	}
 	c.JSON(200, gin.H{
 		"status": "posted",

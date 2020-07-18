@@ -1,11 +1,7 @@
 package structs
 
-type Status struct {
-	On bool
-}
-
-type Lights struct {
-	Status Status
+type Light struct {
+	Number int
 	Red int
 	Blue int
 	Green int
